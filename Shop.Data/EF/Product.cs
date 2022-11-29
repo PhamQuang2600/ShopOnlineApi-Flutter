@@ -1,17 +1,22 @@
-﻿using System;
+﻿using Shop.Data.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace Shop.Data.EF
 {
-    public partial class Product
+    public class Product
     {
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public double? Price { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public string? TypeProduct { get; set; }
-        public string? Original { get; set; }
+        public decimal? Price { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public int Stock { get; set; }  
         public string? ImageProduct { get; set; }
+
+        public virtual ICollection<Cart> Carts { get; set;}
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
+        public virtual ICollection<OriginalProduct> OriginalProducts { get; set; }
     }
 }

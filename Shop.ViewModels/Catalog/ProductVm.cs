@@ -9,7 +9,7 @@ namespace Shop.ViewModels.Catalog
         public DateTime CreatedDate { get; set; }
         public string Name { set; get; }
         public string Description { set; get; }
-        public string TypeProduct { set; get; }
+        public string Category { set; get; }
         public string Original { set; get; }
         public string ImageProduct { set; get; }
     }

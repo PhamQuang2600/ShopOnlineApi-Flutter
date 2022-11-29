@@ -1,21 +1,18 @@
-﻿using Shop.Data.Enum;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Shop.Data.EF
+namespace Shop.ViewModels.System
 {
-    public class Cart
+    public class CartVm
     {
         public Guid Uid { get; set; }
         public int ProductId { get; set; }
         public int? NumberProduct { get; set; }
         public decimal? FeeShipping { get; set; }
-        public DateTime? DateAddCart { get; set; }
         public decimal? Total { get; set; }
         public int? CounterInCart { get; set; }
-         public EnumType.Payment StatusPayment { get; set; }
-
-        public User Users { get; set; }
-        public Product Products { get; set; }
     }
 }
