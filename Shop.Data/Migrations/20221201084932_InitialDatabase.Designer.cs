@@ -12,7 +12,7 @@ using Shop.Data.EF;
 namespace Shop.Data.Migrations
 {
     [DbContext(typeof(ShopOnlineAppContext))]
-    [Migration("20221129135424_InitialDatabase")]
+    [Migration("20221201084932_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,15 +88,12 @@ namespace Shop.Data.Migrations
 
             modelBuilder.Entity("Shop.Data.EF.Cart", b =>
                 {
-                    b.Property<Guid>("Uid")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("uid");
-
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("productId");
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("CounterInCart")
                         .HasColumnType("int")
@@ -113,6 +110,10 @@ namespace Shop.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("numberProduct");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int")
+                        .HasColumnName("productId");
+
                     b.Property<int>("StatusPayment")
                         .HasColumnType("int");
 
@@ -120,23 +121,32 @@ namespace Shop.Data.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("total");
 
-                    b.HasKey("Uid", "ProductId");
+                    b.Property<Guid>("Uid")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("uid");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("Uid");
 
                     b.ToTable("Carts", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Uid = new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"),
-                            ProductId = 1,
+                            Id = 1,
                             CounterInCart = 1,
                             DateAddCart = new DateTime(2022, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FeeShipping = 2m,
                             NumberProduct = 1,
+                            ProductId = 1,
                             StatusPayment = 0,
-                            Total = 1000m
+                            Total = 1000m,
+                            Uid = new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff")
                         });
                 });
 
@@ -171,36 +181,36 @@ namespace Shop.Data.Migrations
                         {
                             Id = 1,
                             Name = "smartphone",
-                            SortOrder = 0,
-                            Status = 0
+                            SortOrder = 1,
+                            Status = 1
                         },
                         new
                         {
                             Id = 2,
                             Name = "keybroad",
-                            SortOrder = 0,
-                            Status = 0
+                            SortOrder = 2,
+                            Status = 1
                         },
                         new
                         {
                             Id = 3,
                             Name = "laptop",
-                            SortOrder = 0,
-                            Status = 0
+                            SortOrder = 3,
+                            Status = 1
                         },
                         new
                         {
                             Id = 4,
                             Name = "headPhone",
-                            SortOrder = 0,
-                            Status = 0
+                            SortOrder = 4,
+                            Status = 1
                         },
                         new
                         {
                             Id = 5,
                             Name = "tablet",
-                            SortOrder = 0,
-                            Status = 0
+                            SortOrder = 5,
+                            Status = 1
                         });
                 });
 
@@ -458,7 +468,6 @@ namespace Shop.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("EmailConfirmed")
@@ -486,10 +495,6 @@ namespace Shop.Data.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -515,15 +520,16 @@ namespace Shop.Data.Migrations
                             Id = new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"),
                             AccessFailedCount = 0,
                             Address = "Phuong Liet - Thanh Xuan - Ha Noi",
-                            ConcurrencyStamp = "0c6294a9-16f7-4616-9afd-ece6271924e1",
+                            ConcurrencyStamp = "8c4b1021-d8a4-4240-8be8-e367ed160f2b",
                             Dob = new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "quangpham2kst@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "PhamQuang",
                             NormalizedEmail = "quangpham2kst@gmail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGv3v1j6vc5NFz4HIIChUKwsrcig6xzeiJRMXc0bJM2hBHAkpvn26SAFBp+MlOdlKw==",
-                            Phone = "0395523926",
+                            NormalizedUserName = "PhamQuang",
+                            PasswordHash = "quangpham2k",
+                            PhoneNumber = "0395523926",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

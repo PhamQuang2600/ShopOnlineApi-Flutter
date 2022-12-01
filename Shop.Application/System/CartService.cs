@@ -24,33 +24,68 @@ namespace Shop.Application.System
         public async Task<int> Create(AddCartRequest request)
         {
             var product = await _context.Products.FindAsync(request.ProductId);
+            var cartUser = await _context.Carts.Where(x=>x.Uid== request.Uid).SingleOrDefaultAsync();
 
-            var total = request.NumberProduct * product.Price + request.FeeShipping;
-            var cart = new Cart()
+            var checkCart = await _context.Carts.Where(x => x.ProductId == request.ProductId && x.Uid == request.Uid).SingleOrDefaultAsync();
+            var productExist = (from products in _context.Carts
+                                where products.ProductId == request.ProductId
+                                select products).Any();
+            var userExist = (from users in _context.Carts
+                                where users.Uid == request.Uid
+                                select users).Any();
+
+            var total = request.NumberProduct * product.Price;
+            if (productExist == true && userExist)
             {
-                CounterInCart = 1,
-                DateAddCart= DateTime.Now,
-                FeeShipping = 2,
-                NumberProduct = 1,
-                ProductId= request.ProductId,
-                Uid =request.Uid,
-                Total = total,
-            };
-            _context.Carts.Add(cart);
-            await _context.SaveChangesAsync();
-            return cart.ProductId;
+                checkCart.NumberProduct = request.NumberProduct;
+                checkCart.Total += total;
+                await _context.SaveChangesAsync();
+                return checkCart.Id;
+            }
+            else if(productExist == false && userExist)
+            {
+                var cart = new Cart()
+                {
+                    CounterInCart = cartUser.CounterInCart += 1,
+                    DateAddCart = DateTime.Now,
+                    
+                    NumberProduct = request.NumberProduct,
+                    ProductId = request.ProductId,
+                    Uid = request.Uid,
+                    Total = total,
+                };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+                return cart.Id;
+            }
+            else
+            {
+                var cart = new Cart()
+                {
+                    CounterInCart = 1,
+                    DateAddCart = DateTime.Now,
+                    
+                    NumberProduct = request.NumberProduct,
+                    ProductId = request.ProductId,
+                    Uid = request.Uid,
+                    Total = total,
+                };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+                return cart.Id;
+            }
         }
 
-        public async Task<int> Delete(int productID)
+        public async Task<int> Delete(int cartId)
         {
-            var cart = await _context.Carts.FindAsync(productID);
+            var cart = await _context.Carts.FindAsync(cartId);
             if (cart == null)
             {
-                throw new Exception($"Can't find a product:{productID}");
+                throw new Exception($"Can't find a product:{cartId}");
             }
             
             _context.Carts.Remove(cart);
-
+            cart.CounterInCart -= 1;
             return await _context.SaveChangesAsync();
         }
 
@@ -71,22 +106,26 @@ namespace Shop.Application.System
             return data;
         }
 
-        public async Task<int> Update(UpdateCartRequest request)
+        public async Task<int> Update(UpdateCartRequest request, int cartId)
         {
-            var cart = await _context.Carts.FindAsync(request.ProductId);
+            var cart = await _context.Carts.FindAsync(cartId);
+            var user = await _context.Users.FindAsync(request.Uid);
             var product = await _context.Products.FindAsync(request.ProductId);
 
-            var total = request.NumberProduct * product.Price + request.FeeShipping;
+            var total = request.NumberProduct * product.Price;
 
-            if (cart == null)
+            if (cart == null && user == null && product == null)
             {
-                throw new Exception($"Can't find a product: {request.ProductId}");
+                throw new Exception($"Can't find a cart: {cartId}");
             }
 
+            cart.Uid = request.Uid;
+            cart.ProductId = request.ProductId;
+            cart.Id= cartId;
             
             cart.NumberProduct = request.NumberProduct;
             cart.Total = total;
-            cart.FeeShipping = request.FeeShipping;
+            cart.FeeShipping = request.FeeShipping !=null ? request.FeeShipping : 0;
             
             return await _context.SaveChangesAsync();
         }

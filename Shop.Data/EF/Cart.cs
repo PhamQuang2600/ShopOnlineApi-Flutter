@@ -6,6 +6,7 @@ namespace Shop.Data.EF
 {
     public class Cart
     {
+        public int Id { get; set; }
         public Guid Uid { get; set; }
         public int ProductId { get; set; }
         public int? NumberProduct { get; set; }

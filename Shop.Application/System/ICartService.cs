@@ -11,7 +11,7 @@ namespace Shop.Application.System
     {
         Task<List<CartVm>> GetAll(Guid uid);
         Task<int> Create(AddCartRequest request);
-        Task<int> Update(UpdateCartRequest request);
-        Task<int> Delete(int productID);
+        Task<int> Update(UpdateCartRequest request, int cartId);
+        Task<int> Delete(int cartId);
     }
 }

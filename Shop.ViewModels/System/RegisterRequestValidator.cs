@@ -11,7 +11,7 @@ namespace Shop.ViewModels.System
     {
         public RegisterRequestValidator()
         {
-            RuleFor(x => x.Account).NotEmpty().WithMessage("UserName is required!");
+            RuleFor(x => x.UserName).NotEmpty().WithMessage("UserName is required!");
 
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required!")
                     .MaximumLength(50).WithMessage("Last name cannot over 50 characters");

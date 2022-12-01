@@ -91,12 +91,11 @@ namespace Shop.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -180,6 +179,8 @@ namespace Shop.Data.Migrations
                 name: "Carts",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     uid = table.Column<Guid>(type: "uniqueidentifier", unicode: false, maxLength: 20, nullable: false),
                     productId = table.Column<int>(type: "int", nullable: false),
                     numberProduct = table.Column<int>(type: "int", nullable: true),
@@ -191,7 +192,7 @@ namespace Shop.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Carts", x => new { x.uid, x.productId });
+                    table.PrimaryKey("PK_Carts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Carts_Products_productId",
                         column: x => x.productId,
@@ -211,11 +212,11 @@ namespace Shop.Data.Migrations
                 columns: new[] { "id", "name", "sortOrder", "status" },
                 values: new object[,]
                 {
-                    { 1, "smartphone", 0, 0 },
-                    { 2, "keybroad", 0, 0 },
-                    { 3, "laptop", 0, 0 },
-                    { 4, "headPhone", 0, 0 },
-                    { 5, "tablet", 0, 0 }
+                    { 1, "smartphone", 1, 1 },
+                    { 2, "keybroad", 2, 1 },
+                    { 3, "laptop", 3, 1 },
+                    { 4, "headPhone", 4, 1 },
+                    { 5, "tablet", 5, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -246,13 +247,13 @@ namespace Shop.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "ImageUser", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "Phone", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"), 0, "Phuong Liet - Thanh Xuan - Ha Noi", "0c6294a9-16f7-4616-9afd-ece6271924e1", new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "quangpham2kst@gmail.com", true, null, false, null, "PhamQuang", "quangpham2kst@gmail.com", null, "AQAAAAEAACcQAAAAEGv3v1j6vc5NFz4HIIChUKwsrcig6xzeiJRMXc0bJM2hBHAkpvn26SAFBp+MlOdlKw==", "0395523926", null, false, "", false, "PhamQuang" });
+                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "ImageUser", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"), 0, "Phuong Liet - Thanh Xuan - Ha Noi", "8c4b1021-d8a4-4240-8be8-e367ed160f2b", new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "quangpham2kst@gmail.com", true, null, false, null, "PhamQuang", "quangpham2kst@gmail.com", "PhamQuang", "quangpham2k", "0395523926", false, "", false, "PhamQuang" });
 
             migrationBuilder.InsertData(
                 table: "Carts",
-                columns: new[] { "productId", "uid", "counterInCart", "DateAddCart", "feeShipping  ", "numberProduct", "StatusPayment", "total" },
-                values: new object[] { 1, new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"), 1, new DateTime(2022, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 2m, 1, 0, 1000m });
+                columns: new[] { "Id", "counterInCart", "DateAddCart", "feeShipping  ", "numberProduct", "productId", "StatusPayment", "total", "uid" },
+                values: new object[] { 1, 1, new DateTime(2022, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 2m, 1, 1, 0, 1000m, new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff") });
 
             migrationBuilder.InsertData(
                 table: "OriginalProducts",
@@ -282,6 +283,11 @@ namespace Shop.Data.Migrations
                 name: "IX_Carts_productId",
                 table: "Carts",
                 column: "productId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_uid",
+                table: "Carts",
+                column: "uid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OriginalProducts_OriginalId",

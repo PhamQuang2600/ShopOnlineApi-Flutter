@@ -45,8 +45,9 @@ namespace Shop.Data.EF
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.ToTable("Carts");
-                entity.HasKey(e => new { e.Uid, e.ProductId });
+                entity.HasKey(e => new {e.Id});
 
+                entity.Property(e => e.Id).UseIdentityColumn().HasColumnName("Id");
                 entity.Property(e => e.Uid)
                     .HasMaxLength(20)
                     .IsUnicode(false)
@@ -154,11 +155,11 @@ namespace Shop.Data.EF
 
 
             modelBuilder.Entity<Category>().HasData(
-        new Category {Id =1,  Name = "smartphone" },
-        new Category { Id = 2, Name = "keybroad" },
-        new Category {Id = 3, Name = "laptop" },
-        new Category {Id = 4, Name = "headPhone"},
-        new Category {Id = 5, Name = "tablet" });
+        new Category {Id =1,  Name = "smartphone", SortOrder = 1, Status= Enum.EnumType.Status.success },
+        new Category { Id = 2, Name = "keybroad", SortOrder = 2, Status = Enum.EnumType.Status.success },
+        new Category {Id = 3, Name = "laptop", SortOrder = 3, Status = Enum.EnumType.Status.success },
+        new Category {Id = 4, Name = "headPhone", SortOrder = 4, Status = Enum.EnumType.Status.success },
+        new Category {Id = 5, Name = "tablet", SortOrder = 5, Status = Enum.EnumType.Status.success });
             
             modelBuilder.Entity<Original>().HasData(
         new Original { Id = 1, Name = "samsung" },
@@ -216,15 +217,16 @@ namespace Shop.Data.EF
             {
                 Id = new Guid("C72C25A6-805C-4085-98E9-8A4DFFD8A7FF"),
                 UserName = "PhamQuang",
+                NormalizedUserName = "PhamQuang",
                 Email = "quangpham2kst@gmail.com",
                 NormalizedEmail = "quangpham2kst@gmail.com",
                 EmailConfirmed = true,
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "quangpham"),
+                PasswordHash = "quangpham2k",
                 SecurityStamp = string.Empty,
                 Name = "PhamQuang",
                 Dob = new DateTime(2000, 06, 02),
                 Address = "Phuong Liet - Thanh Xuan - Ha Noi",
-                Phone = "0395523926"    
+                PhoneNumber = "0395523926"    
             });
 
 
@@ -245,7 +247,7 @@ namespace Shop.Data.EF
 
 
             modelBuilder.Entity<Cart>().HasData(
-        new Cart { ProductId = 1, Uid = new Guid("C72C25A6-805C-4085-98E9-8A4DFFD8A7FF"), DateAddCart = new DateTime(2022,11,19),
+        new Cart {Id = 1, ProductId = 1, Uid = new Guid("C72C25A6-805C-4085-98E9-8A4DFFD8A7FF"), DateAddCart = new DateTime(2022,11,19),
             NumberProduct = 1, CounterInCart = 1, FeeShipping = 2, Total = 1000, StatusPayment = 0 });
 
             OnModelCreatingPartial(modelBuilder);

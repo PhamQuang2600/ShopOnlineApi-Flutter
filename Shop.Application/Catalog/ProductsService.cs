@@ -20,33 +20,35 @@ namespace Shop.Application.Catalog
         }
         public async Task<ProductVm> GetByID(int productID)
         {
-            var query = from a in _context.Products
-                        join b in _context.ProductCategories on a.Id equals b.ProductId into ci
-                        from b in ci.DefaultIfEmpty()
-                        join c in _context.Categories on b.CategoryId equals c.Id into dci
-                        from c in dci.DefaultIfEmpty()
-                        join d in _context.OriginalProducts on a.Id equals d.ProductId into di
-                        from d in di.DefaultIfEmpty()
-                        join e in _context.Originals on d.OriginalId equals e.Id into de
-                        from e in de.DefaultIfEmpty()
-                        where b.ProductId == productID
-                        select new { a, b, c, d, e };
-        
-            var data = query.Where(x=>x.a.Id == productID).Select(x => new ProductVm()
-                {
-                    ID = x.a.Id,
-                    CreatedDate = x.a.CreatedDate,
-                    Description = x.a.Description != null ? x.a.Description : null,
+            var product = await _context.Products.FindAsync(productID);
+            var productCategory = (from a in _context.Categories
+                       join b in _context.ProductCategories
+                       on a.Id equals b.CategoryId
+                       where b.ProductId == productID
+                       select new { a.Name}
+                       );
+            var originalProduct = (from a in _context.Originals
+                                   join b in _context.OriginalProducts
+                                   on a.Id equals b.OriginalId
+                                   where b.ProductId == productID
+                                   select new { a.Name}
+                       );
+
+            var productViewModel = new ProductVm()
+            {
+                ID = product.Id,
+                CreatedDate = product.CreatedDate,
+                Description = product.Description != null ? product.Description : null,
 
 
-                    Name = x.a.Name,
-                    Original = x.e.Name,
-                    Price = x.a.Price,
+                Name = product.Name,
+                Original = originalProduct.Select(x => x.Name).SingleOrDefault().ToString(),
+                Price = product.Price,
 
-                    Category = x.c.Name,
-                    ImageProduct = x.a.ImageProduct
-                });
-                return (ProductVm)data;
+                Category = productCategory.Select(x=>x.Name).SingleOrDefault().ToString(),
+                ImageProduct = product.ImageProduct
+            };
+            return productViewModel;
             
         }
 

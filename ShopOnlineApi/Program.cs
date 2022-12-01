@@ -44,36 +44,36 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger ShopAppOnline", Version = "v1" });
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description = @"Jwt Authorization header using the Bearer scheme.\r\n\r\n
-                                    Enter 'Bearer' [space] and then your token in the text iput below.
-                                    \r\n\r\n Example: 'Bearer 12345abcdef'",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header
-                        },
-                        new List<string>()
-            }
-        });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger ShopOnlineApp", Version = "v1" });
+        //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        //{
+        //    Description = @"Jwt Authorization header using the Bearer scheme.\r\n\r\n
+        //                            Enter 'Bearer' [space] and then your token in the text iput below.
+        //                            \r\n\r\n Example: 'Bearer 12345abcdef'",
+        //    Name = "Authorization",
+        //    In = ParameterLocation.Header,
+        //    Type = SecuritySchemeType.ApiKey,
+        //    Scheme = "Bearer"
+        //});
+        //c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        //        {
+        //            {
+        //                new OpenApiSecurityScheme
+        //                {
+        //                    Reference = new OpenApiReference
+        //                    {
+        //                        Type = ReferenceType.SecurityScheme,
+        //                        Id = "Bearer"
+        //                    },
+        //                    Scheme = "oauth2",
+        //                    Name = "Bearer",
+        //                    In = ParameterLocation.Header
+        //                },
+        //                new List<string>()
+        //    }
+        //});
     });
-
+    
 
 
 string issuer = "0123456789ABCDEF";
@@ -102,22 +102,35 @@ builder.Services.AddAuthentication(option =>
 
 var app = builder.Build();
 
-
+var env = builder.Environment;
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (env.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    
+    app.UseHsts();
+}
+app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger ShopOnlineApp V1");
-    });
-}
-
+   });
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

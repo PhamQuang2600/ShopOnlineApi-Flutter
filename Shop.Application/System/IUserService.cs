@@ -13,5 +13,6 @@ namespace Shop.Application.System
         Task<ApiResult<string>> Authencate(LoginRequest request);
         Task<ApiResult<bool>> Register(RegisterRequest request);
         Task<ApiResult<UserVm>> GetById(Guid id);
+        Task<int> Delete(Guid id);
     }
 }
