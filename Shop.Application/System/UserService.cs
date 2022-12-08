@@ -113,7 +113,7 @@ namespace Shop.Application.System
             return new ApiErrorResult<bool>("Sign up fail!");
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<ApiResult<bool>> Delete(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -121,8 +121,12 @@ namespace Shop.Application.System
                 throw new Exception($"Can't find a user:{id}");
             }
 
-            _context.Users.Remove(user);
-            return await _context.SaveChangesAsync();
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+            return new ApiErrorResult<bool>("Delete user false!");
         }
     }
 }

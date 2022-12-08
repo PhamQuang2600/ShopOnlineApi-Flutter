@@ -18,11 +18,9 @@ namespace ShopOnlineApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
-        public UsersController(IUserService userService, IConfiguration configuration)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _configuration = configuration;
         }
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
@@ -62,13 +60,8 @@ namespace ShopOnlineApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var affectedResult = await _userService.Delete(id);
-            if (affectedResult == 0)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
+            var result = await _userService.Delete(id);
+            return Ok(result);
         }
 
 
