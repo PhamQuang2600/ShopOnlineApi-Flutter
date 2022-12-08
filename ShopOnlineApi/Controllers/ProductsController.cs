@@ -35,7 +35,7 @@ namespace ShopOnlineApi.Controllers
             var lastestProducts = await _productService.GetLatestProduct( take);
             return Ok(lastestProducts);
         }
-        [HttpGet("same/{take}")]
+        [HttpGet("same/{productId}/{take}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSameProduct(int productId,int take)
         {

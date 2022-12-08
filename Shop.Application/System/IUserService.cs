@@ -1,4 +1,4 @@
-﻿using Shop.ViewModels.Common;
+﻿
 using Shop.ViewModels.System;
 using System;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Shop.Application.System
 {
     public interface IUserService
     {
-        Task<ApiResult<string>> Authencate(LoginRequest request);
-        Task<ApiResult<bool>> Register(RegisterRequest request);
-        Task<ApiResult<UserVm>> GetById(Guid id);
-        Task<ApiResult<bool>> Delete(Guid id);
+        Task<string> Authencate(LoginRequest request);
+        Task<bool> Register(RegisterRequest request);
+        Task<UserVm> GetById(Guid id);
+        Task<bool> Delete(Guid id);
     }
 }

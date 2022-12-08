@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shop.Data.EF;
-using Shop.ViewModels.Common;
 using Shop.ViewModels.System;
 using System;
 using System.Collections.Generic;
@@ -32,22 +31,22 @@ namespace Shop.Application.System
             _context = context;
         }
 
-        public async Task<ApiResult<string>> Authencate(LoginRequest request)
+        public async Task<string> Authencate(LoginRequest request)
         {
-            var user = _context.Users.SingleOrDefault(x => x.UserName == request.UserName);
+            var users = _context.Users.SingleOrDefault(x => x.UserName == request.user);
 
-            if (user == null)
-                return new ApiErrorResult<string>("Account not exists");
+            if (users == null)
+                return("Account not exists");
 
-            if (user.PasswordHash != request.Password)
+            if (users.PasswordHash != request.password)
             {
-                return new ApiErrorResult<string>("Login fail");
+                return("Login fail");
             }
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.GivenName, user.Name),
-                new Claim(ClaimTypes.Name, request.UserName)
+                new Claim(ClaimTypes.Email, users.Email),
+                new Claim(ClaimTypes.GivenName, users.Name),
+                new Claim(ClaimTypes.Name, request.user)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789ABCDEF"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -56,47 +55,45 @@ namespace Shop.Application.System
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
-            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<ApiResult<UserVm>> GetById(Guid id)
+        public async Task<UserVm> GetById(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
-                return new ApiErrorResult<UserVm>("User not exists");
+                return null;
             }
             var userVm = new UserVm()
             {
                 Email = user.Email,
-                Dob = user.Dob,
                 UserName = user.UserName,
                 Phone = user.PhoneNumber,
                 Address = user.Address,
-                ImageUser = user.ImageUser,
+                ImageUser = user.ImageUser!=null? user.ImageUser:null,
                 Name= user.Name,
                 Password = user.PasswordHash,
                 Uid = user.Id
                 
             };
-            return new ApiSuccessResult<UserVm>(userVm);
+            return userVm;
         }
 
-        public async Task<ApiResult<bool>> Register(RegisterRequest request)
+        public async Task<bool> Register(RegisterRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user != null)
             {
-                return new ApiErrorResult<bool>("Account has exists!");
+                return false;
             }
             if (await _userManager.FindByEmailAsync(request.Email) != null)
             {
-                return new ApiErrorResult<bool>("Email has exists!");
+                return false;
             }
             user = new User()
             {
                 Email = request.Email,
-                Dob = request.Dob,
                 UserName = request.UserName,
                 PhoneNumber = request.Phone,
                 Address = request.Address,
@@ -108,12 +105,12 @@ namespace Shop.Application.System
             await _context.SaveChangesAsync();
             if (result != null)
             {
-                return new ApiSuccessResult<bool>();
+                return true;
             }
-            return new ApiErrorResult<bool>("Sign up fail!");
+            return false;
         }
 
-        public async Task<ApiResult<bool>> Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -124,9 +121,9 @@ namespace Shop.Application.System
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
-                return new ApiSuccessResult<bool>();
+                return true;
             }
-            return new ApiErrorResult<bool>("Delete user false!");
+            return false;
         }
     }
 }

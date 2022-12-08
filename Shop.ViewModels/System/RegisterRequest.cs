@@ -13,9 +13,6 @@ namespace Shop.ViewModels.System
         public string UserName { get; set; }
         
         public string Name { get; set; }
-        
-        [DataType(DataType.Date)]
-        public DateTime Dob { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         
