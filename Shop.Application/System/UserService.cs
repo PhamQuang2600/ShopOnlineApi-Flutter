@@ -36,11 +36,11 @@ namespace Shop.Application.System
             var users = _context.Users.SingleOrDefault(x => x.UserName == request.user);
 
             if (users == null)
-                return("Account not exists");
+                return("Account not exists!");
 
             if (users.PasswordHash != request.password)
             {
-                return("Login fail");
+                return("Password wrong!");
             }
             var claims = new[]
             {

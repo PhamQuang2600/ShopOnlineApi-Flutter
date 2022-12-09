@@ -30,7 +30,7 @@ namespace ShopOnlineApi.Controllers
                 return BadRequest(ModelState);
             }
             var resultToken = await _userService.Authencate(request);
-            if (string.IsNullOrEmpty(resultToken))
+            if (resultToken == "Account not exists!" || resultToken == "Password wrong!")
             {
                 return BadRequest(resultToken);
             }
