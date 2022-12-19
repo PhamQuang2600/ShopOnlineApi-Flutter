@@ -92,7 +92,9 @@ namespace Shop.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Dob = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isAuth = table.Column<bool>(type: "bit", nullable: false),
+                    Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -183,10 +185,14 @@ namespace Shop.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     uid = table.Column<Guid>(type: "uniqueidentifier", unicode: false, maxLength: 20, nullable: false),
                     productId = table.Column<int>(type: "int", nullable: false),
+                    productName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    productImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    productPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     numberProduct = table.Column<int>(type: "int", nullable: true),
                     feeShipping = table.Column<decimal>(name: "feeShipping  ", type: "decimal(18,2)", nullable: true),
                     DateAddCart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     total = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    TotalAll = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     counterInCart = table.Column<int>(type: "int", nullable: true),
                     StatusPayment = table.Column<int>(type: "int", nullable: false)
                 },
@@ -247,13 +253,13 @@ namespace Shop.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "ImageUser", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"), 0, "Phuong Liet - Thanh Xuan - Ha Noi", "8c4b1021-d8a4-4240-8be8-e367ed160f2b", new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "quangpham2kst@gmail.com", true, null, false, null, "PhamQuang", "quangpham2kst@gmail.com", "PhamQuang", "quangpham2k", "0395523926", false, "", false, "PhamQuang" });
+                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "ImageUser", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName", "isAuth", "token" },
+                values: new object[] { new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"), 0, "Phuong Liet - Thanh Xuan - Ha Noi", "44f73659-55a3-41ae-b906-10cea17b05d1", new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "quangpham2kst@gmail.com", true, null, false, null, "PhamQuang", "quangpham2kst@gmail.com", "PhamQuang", "quangpham2k", "0395523926", false, "", false, "PhamQuang", false, null });
 
             migrationBuilder.InsertData(
                 table: "Carts",
-                columns: new[] { "Id", "counterInCart", "DateAddCart", "feeShipping  ", "numberProduct", "productId", "StatusPayment", "total", "uid" },
-                values: new object[] { 1, 1, new DateTime(2022, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 2m, 1, 1, 0, 1000m, new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff") });
+                columns: new[] { "Id", "counterInCart", "DateAddCart", "feeShipping  ", "numberProduct", "productId", "productImage", "productName", "productPrice", "StatusPayment", "total", "TotalAll", "uid" },
+                values: new object[] { 1, 1, new DateTime(2022, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 2m, 1, 1, "1.jfif", "Iphone 13 pro max", 1000m, 0, 1000m, null, new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff") });
 
             migrationBuilder.InsertData(
                 table: "OriginalProducts",

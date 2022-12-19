@@ -12,7 +12,7 @@ using Shop.Data.EF;
 namespace Shop.Data.Migrations
 {
     [DbContext(typeof(ShopOnlineAppContext))]
-    [Migration("20221201084932_InitialDatabase")]
+    [Migration("20221215144128_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,12 +114,29 @@ namespace Shop.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("productId");
 
+                    b.Property<string>("ProductImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("productImage");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("productName");
+
+                    b.Property<decimal?>("ProductPrice")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("productPrice");
+
                     b.Property<int>("StatusPayment")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("total");
+
+                    b.Property<decimal?>("TotalAll")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("Uid")
                         .HasMaxLength(20)
@@ -144,6 +161,9 @@ namespace Shop.Data.Migrations
                             FeeShipping = 2m,
                             NumberProduct = 1,
                             ProductId = 1,
+                            ProductImage = "1.jfif",
+                            ProductName = "Iphone 13 pro max",
+                            ProductPrice = 1000m,
                             StatusPayment = 0,
                             Total = 1000m,
                             Uid = new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff")
@@ -464,7 +484,7 @@ namespace Shop.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Dob")
+                    b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -510,6 +530,12 @@ namespace Shop.Data.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isAuth")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("token")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -520,7 +546,7 @@ namespace Shop.Data.Migrations
                             Id = new Guid("c72c25a6-805c-4085-98e9-8a4dffd8a7ff"),
                             AccessFailedCount = 0,
                             Address = "Phuong Liet - Thanh Xuan - Ha Noi",
-                            ConcurrencyStamp = "8c4b1021-d8a4-4240-8be8-e367ed160f2b",
+                            ConcurrencyStamp = "44f73659-55a3-41ae-b906-10cea17b05d1",
                             Dob = new DateTime(2000, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "quangpham2kst@gmail.com",
                             EmailConfirmed = true,
@@ -533,7 +559,8 @@ namespace Shop.Data.Migrations
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "PhamQuang"
+                            UserName = "PhamQuang",
+                            isAuth = false
                         });
                 });
 

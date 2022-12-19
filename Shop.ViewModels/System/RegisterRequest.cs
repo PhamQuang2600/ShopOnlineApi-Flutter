@@ -10,18 +10,18 @@ namespace Shop.ViewModels.System
 {
     public class RegisterRequest
     {
-        public string UserName { get; set; }
+        public string user { get; set; }
         
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Email { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public string email { get; set; }
         
-        public string Phone { get; set; }
+        public string phone { get; set; }
 
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string password { get; set; }
             
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
+        public string confirmpassword { get; set; }
     }
 }

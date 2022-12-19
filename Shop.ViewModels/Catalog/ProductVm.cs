@@ -4,13 +4,13 @@ namespace Shop.ViewModels.Catalog
 {
     public class ProductVm
     {
-        public int ID { get; set; }
-        public decimal? Price { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string Name { set; get; }
-        public string Description { set; get; }
-        public string Category { set; get; }
-        public string Original { set; get; }
-        public string ImageProduct { set; get; }
+        public int id { get; set; }
+        public decimal? price { get; set; }
+        public string createdDate { get; set; }
+        public string name { set; get; }
+        public string description { set; get; }
+        public string category { set; get; }
+        public string original { set; get; }
+        public string imageProduct { set; get; }
     }
 }

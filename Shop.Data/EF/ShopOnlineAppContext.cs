@@ -52,7 +52,9 @@ namespace Shop.Data.EF
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("uid");
-
+                entity.Property(e=>e.ProductImage).HasColumnName("productImage");
+                entity.Property(e => e.ProductName).HasColumnName("productName");
+                entity.Property(e => e.ProductPrice).HasColumnName("productPrice");
                 entity.Property(e => e.ProductId).HasColumnName("productId");
 
                 entity.Property(e => e.CounterInCart).HasColumnName("counterInCart");
@@ -247,7 +249,7 @@ namespace Shop.Data.EF
 
 
             modelBuilder.Entity<Cart>().HasData(
-        new Cart {Id = 1, ProductId = 1, Uid = new Guid("C72C25A6-805C-4085-98E9-8A4DFFD8A7FF"), DateAddCart = new DateTime(2022,11,19),
+        new Cart {Id = 1, ProductId = 1, Uid = new Guid("C72C25A6-805C-4085-98E9-8A4DFFD8A7FF"),ProductName= "Iphone 13 pro max", ProductImage= "1.jfif", ProductPrice=1000, DateAddCart = new DateTime(2022,11,19),
             NumberProduct = 1, CounterInCart = 1, FeeShipping = 2, Total = 1000, StatusPayment = 0 });
 
             OnModelCreatingPartial(modelBuilder);

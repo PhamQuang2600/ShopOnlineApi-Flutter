@@ -55,18 +55,23 @@ namespace Shop.Application.System
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var createToken = new JwtSecurityTokenHandler().WriteToken(token);
+            users.token = createToken;
+            users.isAuth= true;
+            await _context.SaveChangesAsync();
+            return createToken;
         }
 
-        public async Task<UserVm> GetById(Guid id)
+        public async Task<UserVm> GetById(string token)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _context.Users.SingleOrDefaultAsync(x=>x.token == token);
             if (user == null)
             {
                 return null;
             }
             var userVm = new UserVm()
             {
+
                 Email = user.Email,
                 UserName = user.UserName,
                 Phone = user.PhoneNumber,
@@ -74,40 +79,37 @@ namespace Shop.Application.System
                 ImageUser = user.ImageUser!=null? user.ImageUser:null,
                 Name= user.Name,
                 Password = user.PasswordHash,
-                Uid = user.Id
-                
+                Uid = user.Id,
+                Token = user.token
             };
             return userVm;
         }
 
-        public async Task<bool> Register(RegisterRequest request)
+        public async Task<int> Register(RegisterRequest request)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
+            var user = await _userManager.FindByNameAsync(request.user);
             if (user != null)
             {
-                return false;
+                return 0;
             }
-            if (await _userManager.FindByEmailAsync(request.Email) != null)
+            if (await _userManager.FindByEmailAsync(request.email) != null)
             {
-                return false;
+                return 0;
             }
             user = new User()
             {
-                Email = request.Email,
-                UserName = request.UserName,
-                PhoneNumber = request.Phone,
-                Address = request.Address,
-                Name = request.Name,
-                PasswordHash = request.Password
+                Email = request.email,
+                UserName = request.user,
+                PhoneNumber = request.phone,
+                Address = request.address,
+                Name = request.name,
+                PasswordHash = request.password
                 
             };
-            var result = _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            if (result != null)
-            {
-                return true;
-            }
-            return false;
+              _context.Users.Add(user);
+            return await _context.SaveChangesAsync();
+                
+            
         }
 
         public async Task<bool> Delete(Guid id)
@@ -124,6 +126,23 @@ namespace Shop.Application.System
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> LogOut(string token)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x=>x.token== token);
+            if(user == null)
+            {
+                return false;
+            }
+            else
+            {
+                user.token = null;
+                user.isAuth = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Shop.Data.EF
         public string Name { get; set; }
         public string Address { get; set; }
         public string? ImageUser { get; set; }
+        public string? token { get; set; }
+        public bool isAuth { get; set; }
         public DateTime? Dob { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
     }

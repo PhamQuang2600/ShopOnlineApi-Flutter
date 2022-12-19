@@ -7,6 +7,7 @@ namespace Shop.Application.Catalog
         Task<ProductVm> GetByID(int productID);
         Task<List<ProductVm>> GetFeatureProduct( int take);
         Task<List<ProductVm>> GetLatestProduct(int take);
+        Task<List<ProductVm>> SearchProduct(string keyword);
         Task<List<ProductVm>> GetSameProduct(int productID,int take);
     }
 }

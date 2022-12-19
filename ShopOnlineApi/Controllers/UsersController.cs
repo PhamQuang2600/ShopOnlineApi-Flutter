@@ -44,17 +44,33 @@ namespace ShopOnlineApi.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.Register(request);
-            if (!result)
+            if (result==0)
             {
                 return BadRequest(result);
             }
             return Ok(result);
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+
+
+        [HttpGet("{token}")]
+        public async Task<IActionResult> GetById(string token)
         {
-            var user = await _userService.GetById(id);
+            var user = await _userService.GetById(token);
             return Ok(user);
+        }
+
+        [HttpGet("logout/{token}")]
+        public async Task<IActionResult> LogOut(string token)
+        {
+            var user = await _userService.LogOut(token);
+            if(user)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]

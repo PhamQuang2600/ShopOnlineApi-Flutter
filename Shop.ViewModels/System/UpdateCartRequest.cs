@@ -10,6 +10,7 @@ namespace Shop.ViewModels.System
     {
         public Guid Uid { get; set; }   
         public int ProductId { get; set; }
+        public int CartId { get; set; }
         public int? NumberProduct { get; set; }
         public decimal? FeeShipping { get; set; }
     }

@@ -15,10 +15,10 @@ namespace ShopOnlineApi.Controllers
 
             _productService = productService;
         }
-        [HttpGet("{productID}")]
-        public async Task<IActionResult> GetByID(int productID)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByID(int id)
         {
-            var product = await _productService.GetByID(productID);
+            var product = await _productService.GetByID(id);
             return Ok(product);
         }
         [HttpGet("featured/{take}")]
@@ -40,6 +40,13 @@ namespace ShopOnlineApi.Controllers
         public async Task<IActionResult> GetSameProduct(int productId,int take)
         {
             var sameProducts = await _productService.GetSameProduct(productId, take);
+            return Ok(sameProducts);
+        }
+        [HttpGet("search/{keyword}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchProduct(string keyword)
+        {
+            var sameProducts = await _productService.SearchProduct(keyword);
             return Ok(sameProducts);
         }
     }
